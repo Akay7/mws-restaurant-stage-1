@@ -131,7 +131,8 @@ createReviewHTML = (review) => {
   name.appendChild(date);
 
   const rating = document.createElement('span');
-  rating.innerHTML = 'Rating: ' + '★'.repeat(review.rating);
+  rating.innerHTML = 'Rating: ' + '★'.repeat(review.rating) + '☆'.repeat(5-review.rating);
+  rating.setAttribute('aria-label', `Rating: ${review.rating}`);
   rating.className = 'rating';
   li.appendChild(rating);
 
