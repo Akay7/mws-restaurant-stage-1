@@ -62,15 +62,15 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 /* ====================== Navigation ====================== */
 nav {
   width: 100%;
+}
+
+nav h1 {
+  margin: auto;
   height: 80px;
   line-height: 80px;
   background-color: #252831;
   text-align: center;
   vertical-align: center;
-}
-
-nav h1 {
-  margin: auto;
 }
 
 nav h1 a {
@@ -235,6 +235,8 @@ main {
 
 .restaurant-breadcrumb {
   box-sizing: border-box;
+  text-align: left;
+  vertical-align: center;
 }
 
 .restaurant-map {
