@@ -1,4 +1,4 @@
-var staticCacheName = 'mws-restaurant';
+const staticCacheName = 'mws-restaurant';
 
 
 self.addEventListener('install', function (event) {
@@ -12,7 +12,6 @@ self.addEventListener('install', function (event) {
         'js/restaurant_info.js',
 
         'js/dbhelper.js',
-        'data/restaurants.json',
 
         'css/styles.css'
       ])
