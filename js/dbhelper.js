@@ -1,3 +1,22 @@
+getIndexDB = new Promise(function createIndexDB(resolve) {
+  let db;
+  let idbOpenRequest = indexedDB.open('restaurants-db', 1);
+  idbOpenRequest.onerror = (event) => console.log('Open IDB error');
+  idbOpenRequest.onsuccess = (event) => {
+    console.log('Open IDB success');
+    resolve(idbOpenRequest.result);
+  };
+  idbOpenRequest.onupgradeneeded = (event) => {
+    let db = event.target.result;
+    db.onerror = () => console.log('Error opening DB');
+
+    let objectStore = db.createObjectStore('restaurants', { keyPath: 'id'});
+
+    console.log('object store created');
+  };
+});
+
+
 /**
  * Common database helper functions.
  */
@@ -5,7 +24,6 @@ class DBHelper {
 
   /**
    * Database URL.
-   * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
@@ -16,18 +34,34 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${DBHelper.DATABASE_URL}restaurants`);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
+    return fetch(`${DBHelper.DATABASE_URL}restaurants`)
+      .then(response => response.json())
+      .then(restaurants => {
         callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+        return restaurants;
+      })
+      .then(restaurants => {
+        getIndexDB.then(function (db) {
+          let transaction = db.transaction(['restaurants'], 'readwrite');
+          transaction.oncomplete = () => console.log('transaction success');
+          transaction.onerror = () => console.log('transaction error');
+          let objectStore = transaction.objectStore('restaurants');
+          restaurants.forEach((restaurant) => {
+            objectStore.put(restaurant);
+            objectStore.onsuccess = () => console.log('success adding', restaurant);
+          });
+        });
+      })
+      .catch(error => {
+        getIndexDB.then(function (db) {
+          let transaction = db.transaction(['restaurants']);
+          let objectStore = transaction.objectStore('restaurants');
+          let getAllRequest = objectStore.getAll();
+          getAllRequest.onsuccess = (event) => {
+            callback(null, event.target.result);
+          }
+        })
+      });
   }
 
   /**
@@ -37,7 +71,7 @@ class DBHelper {
     // fetch  restaurant with proper error handling.
     return fetch(`${DBHelper.DATABASE_URL}restaurants/${id}`)
       .then(response => response.json())
-      .then(data => callback(null, data))
+      .then(restaurant => callback(null, restaurant))
       .catch(error => callback('Restaurant does not exist', null));
   }
 
