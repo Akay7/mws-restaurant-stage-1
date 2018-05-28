@@ -2,12 +2,23 @@
 <html lang="en">
 
 <head>
+  <script>
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        console.log('service worker registered');
+      }).catch(function (err) {
+        console.log('service worker registering failed');
+      });
+    }
+  </script>
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#252831">
   <title>Restaurant Info</title>
 </head>
 

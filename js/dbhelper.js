@@ -1,5 +1,4 @@
 getIndexDB = new Promise(function createIndexDB(resolve) {
-  let db;
   let idbOpenRequest = indexedDB.open('restaurants-db', 1);
   idbOpenRequest.onerror = (event) => console.log('Open IDB error');
   idbOpenRequest.onsuccess = (event) => {
@@ -68,11 +67,19 @@ class DBHelper {
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch  restaurant with proper error handling.
-    return fetch(`${DBHelper.DATABASE_URL}restaurants/${id}`)
-      .then(response => response.json())
-      .then(restaurant => callback(null, restaurant))
-      .catch(error => callback('Restaurant does not exist', null));
+    // fetch all restaurants with proper error handling.
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const restaurant = restaurants.find(r => r.id === +id);
+        if (restaurant) { // Got the restaurant
+          callback(null, restaurant);
+        } else { // Restaurant does not exist in the database
+          callback('Restaurant does not exist', null);
+        }
+      }
+    });
   }
 
   /**
