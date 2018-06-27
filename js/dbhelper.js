@@ -9,7 +9,8 @@ getIndexDB = new Promise(function createIndexDB(resolve) {
     let db = event.target.result;
     db.onerror = () => console.log('Error opening DB');
 
-    let objectStore = db.createObjectStore('restaurants', { keyPath: 'id'});
+    db.createObjectStore('restaurants', { keyPath: 'id'});
+    db.createObjectStore('reviews', { keyPath: 'id' });
 
     console.log('object store created');
   };
@@ -169,6 +170,42 @@ class DBHelper {
         callback(null, uniqueCuisines);
       }
     });
+  }
+
+  /**
+   * Fetch all restaurant reviews by restaurant ID
+   */
+  static fetchRestaurantReviewsById(id, callback) {
+    // fetch all restaurants with proper error handling.
+    return fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`)
+      .then(response => response.json())
+      .then(reviews => {
+        callback(null, reviews);
+        return reviews;
+      })
+      .then(reviews => {
+        getIndexDB.then(function (db) {
+          let transaction = db.transaction(['reviews'], 'readwrite');
+          transaction.oncomplete = () => console.log('transaction success');
+          transaction.onerror = () => console.log('transaction error');
+          let objectStore = transaction.objectStore('reviews');
+          objectStore.put({
+            'id': id,
+            'reviews': reviews
+          });
+          objectStore.onsuccess = () => console.log('success adding', restaurant);
+        });
+      })
+      .catch(error => {
+        getIndexDB.then(function (db) {
+          let transaction = db.transaction(['reviews']);
+          let objectStore = transaction.objectStore('reviews');
+          let getRequest = objectStore.get(id);
+          getRequest.onsuccess = (event) => {
+            callback(null, event.target.result.reviews);
+          }
+        })
+      });
   }
 
   /**
