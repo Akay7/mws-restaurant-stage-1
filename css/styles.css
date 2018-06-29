@@ -292,7 +292,8 @@ main {
 }
 
 .restaurant-container,
-.reviews-container {
+.reviews-container,
+.send-review-container {
   box-sizing: border-box;
   padding: 40px 30px;
 }
@@ -300,6 +301,14 @@ main {
 .reviews-container h3 {
   color: #bf5605;
   font-size: 24pt;
+  font-weight: 300;
+  letter-spacing: -1px;
+  padding-bottom: 1pt;
+}
+
+.send-review-container h4 {
+  color: #bf5605;
+  font-size: 18pt;
   font-weight: 300;
   letter-spacing: -1px;
   padding-bottom: 1pt;
@@ -353,6 +362,11 @@ main {
   color: #666;
 }
 
+.send-review-container .comment-area {
+  width: 100%;
+  resize: vertical;
+}
+
 @media (min-width: 700px) {
   .restaurant-header {
     position: fixed;
@@ -377,6 +391,7 @@ main {
   .restaurant-breadcrumb,
   .restaurant-container,
   .reviews-container,
+  .send-review-container,
   .inside #footer {
     width: 50%;
   }

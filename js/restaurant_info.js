@@ -1,5 +1,6 @@
 let restaurant;
 var newMap;
+let sendReviewWorker = new Worker('js/send_review_worker.js');
 
 /**
  * Initialize map as soon as the page is loaded.
@@ -193,4 +194,37 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+
+
+sendReview = (form) => {
+  let payload = {
+    'restaurant_id': self.restaurant.id,
+    'name': form.name.value,
+    'rating': form.rating.value,
+    'comments': form.comments.value
+  };
+  form.submitBtn.disabled = true;
+
+  let addReviewAndResetForm = (review) => {
+      const container = document.getElementById('reviews-container');
+      const ul = document.getElementById('reviews-list');
+      ul.appendChild(createReviewHTML(review));
+      container.appendChild(ul);
+      form.reset();
+      form.submitBtn.disabled = false;
+  };
+
+  DBHelper.postRestaurantReview(payload)
+    .then(review => {
+      addReviewAndResetForm(review);
+    })
+    .catch(error => {
+      alert("Can't establish connection with server. Your review will resend automatically.");
+      sendReviewWorker.onmessage = (message) => {
+        addReviewAndResetForm(message.data);
+        alert("Your message successfully sent.");
+      };
+      sendReviewWorker.postMessage(payload);
+    })
 };

@@ -209,6 +209,20 @@ class DBHelper {
   }
 
   /**
+   * Post all restaurant review to restaurant.
+   */
+  static postRestaurantReview(review) {
+    return fetch(`${DBHelper.DATABASE_URL}reviews/`, {
+      method: 'POST',
+      body: JSON.stringify(review)
+    })
+    .then(response => response.json())
+    .catch(error => {
+      throw new Error("Right now can't establish connection to server, will send later");
+    })
+  }
+
+  /**
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {

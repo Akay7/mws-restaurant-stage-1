@@ -65,6 +65,29 @@
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
+    <!-- Beginning send review -->
+    <section class="send-review-container">
+      <h4>Write your review</h4>
+      <form class="send-review-form" onsubmit="sendReview(this);return false">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" type="text" placeholder="Enter your name" required>
+        </div>
+
+        <div>
+          <label for="rating">Rating</label>
+          <input id="rating" type="number" min="1" max="5" required>
+        </div>
+
+        <div>
+          <label for="comments">Comment</label><br>
+          <textarea id="comments" class="comment-area" rows="4"
+                    placeholder="Write your comments about this restaurant" required></textarea>
+        </div>
+        <input id='submitBtn' type="submit">
+      </form>
+    </section>
+    <!-- End send review -->
   </main>
   <!-- End main -->
 
