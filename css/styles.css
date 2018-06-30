@@ -77,7 +77,7 @@ nav h1 a {
   color: #fff;
   font-size: 14pt;
   font-weight: 200;
-  letter-spacing: 10px;
+  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
@@ -111,6 +111,12 @@ nav h1 a {
 #breadcrumb li a:hover {
   color: #01447e;
   text-decoration: underline;
+}
+
+@media (min-width: 450px) {
+  nav h1 a {
+    letter-spacing: 10px;
+  }
 }
 
 /* ====================== Map ====================== */
