@@ -76,6 +76,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
+  const favorite = document.getElementById('restaurant-favorite');
+  favorite.setAttribute("aria-pressed", restaurant.is_favorite);
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
@@ -227,4 +230,16 @@ sendReview = (form) => {
       };
       sendReviewWorker.postMessage(payload);
     })
+};
+
+toggleFavorite = (event) => {
+  let element = event.target;
+  // Check to see if the button is pressed
+  let pressed = !(element.getAttribute("aria-pressed") === "true");
+  // Change aria-pressed to the opposite state
+
+  DBHelper.postRestaurantFavoriteStatus(self.restaurant.id, pressed)
+    .then((restaurant) => {
+      element.setAttribute("aria-pressed", pressed);
+    });
 };

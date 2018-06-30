@@ -264,15 +264,37 @@ main {
   width: 100%;
 }
 
+.restaurant-title {
+  margin: 15px 0 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: stretch;
+  align-items: flex-start;
+}
+
 #restaurant-name {
   color: #bf5605;
   font-family: Arial, sans-serif;
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
-  margin: 15px 0 30px;
   text-transform: uppercase;
   line-height: 1.1;
+
+  flex: 0 1 auto;
+  align-self: auto;
+}
+
+.restaurant-favorite {
+  flex: 0 1 auto;
+  align-self: auto;
+}
+
+.restaurant-favorite[aria-pressed="true"] {
+  color: white;
+  background-color: #f00;
 }
 
 #restaurant-img {

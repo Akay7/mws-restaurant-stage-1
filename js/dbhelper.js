@@ -222,6 +222,27 @@ class DBHelper {
     })
   }
 
+
+  /**
+   * Set restaurant favorite/unfavorite
+   */
+  static postRestaurantFavoriteStatus(id, status) {
+    return fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${status}`, {
+      method: 'POST'
+    })
+    .then(response => response.json())
+    .then(restaurant => {
+      getIndexDB.then(function (db) {
+        let transaction = db.transaction(['restaurants'], 'readwrite');
+        transaction.oncomplete = () => console.log('transaction success');
+        transaction.onerror = () => console.log('transaction error');
+        let objectStore = transaction.objectStore('restaurants');
+        objectStore.put(restaurant);
+        objectStore.onsuccess = () => console.log('success adding', restaurant);
+      });
+    })
+  }
+
   /**
    * Restaurant page URL.
    */
@@ -239,7 +260,7 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker  
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
       {title: restaurant.name,
@@ -249,5 +270,4 @@ class DBHelper {
       marker.addTo(newMap);
     return marker;
   }
-
 }
