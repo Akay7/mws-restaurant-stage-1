@@ -28,5 +28,8 @@ This repository uses [leafletjs](https://leafletjs.com/) with [Mapbox](https://w
 
 Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
 
+### How to start this project
 
-
+You don't need install any special requirements. You can just serve this project as folder and everything must work well. 
+You can use python3 for this task, just call next command in console:
+`python3 -m http.server`

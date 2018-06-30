@@ -1,3 +1,5 @@
+// Here caching images of restaurant and all static assets
+
 const staticCacheName = 'mws-restaurant';
 
 
